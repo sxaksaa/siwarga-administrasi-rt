@@ -1,0 +1,52 @@
+<?php
+
+namespace Tests\Feature;
+
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use Laravel\Sanctum\Sanctum;
+use Tests\TestCase;
+
+class ResidentApiTest extends TestCase
+{
+    use RefreshDatabase;
+
+    public function test_admin_dapat_menambah_dan_mengubah_penghuni(): void
+    {
+        Storage::fake('local');
+        Sanctum::actingAs(User::factory()->create());
+
+        $create = $this->post('/api/penghuni', [
+            'nama_lengkap' => 'Budi Santoso',
+            'foto_ktp' => UploadedFile::fake()->image('ktp-budi.jpg'),
+            'jenis_penghuni' => 'tetap',
+            'nomor_telepon' => '081234567890',
+            'sudah_menikah' => true,
+        ], ['Accept' => 'application/json']);
+
+        $create->assertSuccessful()->assertJsonPath('data.nama_lengkap', 'Budi Santoso');
+        $residentId = $create->json('data.id');
+        $this->assertDatabaseHas('penghuni', ['id' => $residentId, 'jenis_penghuni' => 'tetap']);
+
+        $this->get("/api/penghuni/{$residentId}/foto-ktp")
+            ->assertOk();
+
+        $this->patchJson("/api/penghuni/{$residentId}", ['nomor_telepon' => '089999999999'])
+            ->assertOk()
+            ->assertJsonPath('data.nomor_telepon', '089999999999');
+    }
+
+    public function test_foto_ktp_wajib_dan_harus_berupa_gambar(): void
+    {
+        Sanctum::actingAs(User::factory()->create());
+
+        $this->postJson('/api/penghuni', [
+            'nama_lengkap' => 'Budi Santoso',
+            'jenis_penghuni' => 'tetap',
+            'nomor_telepon' => '081234567890',
+            'sudah_menikah' => true,
+        ])->assertUnprocessable()->assertJsonValidationErrors('foto_ktp');
+    }
+}
