@@ -148,4 +148,3 @@ Field utama: `kategori`, `keterangan`, `nominal`, `tanggal_pengeluaran`, `rutin`
 6. Catat pembayaran.
 7. Tambahkan pengeluaran.
 8. Periksa laporan bulanan dan tahunan.
-
