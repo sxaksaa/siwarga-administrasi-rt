@@ -18,6 +18,8 @@ Aplikasi full-stack untuk mengelola penghuni, riwayat hunian rumah, tagihan iura
 
 Panduan instalasi lengkap tersedia di [`dokumentasi/PANDUAN_INSTALASI.md`](dokumentasi/PANDUAN_INSTALASI.md).
 
+Untuk menjalankan aplikasi, cukup buat satu database MySQL bernama `administrasi_rt`. Database `administrasi_rt_test` bersifat opsional dan hanya diperlukan jika ingin menjalankan pengujian backend.
+
 Dokumentasi endpoint tersedia di [`dokumentasi/API.md`](dokumentasi/API.md).
 
 Rangkuman screenshot setiap fitur tersedia di [`dokumentasi/SCREENSHOTS.md`](dokumentasi/SCREENSHOTS.md).

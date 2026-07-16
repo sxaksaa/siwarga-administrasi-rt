@@ -31,19 +31,15 @@ cd administrasi-rt
 
 ## 3. Membuat database MySQL
 
-Buka MySQL atau phpMyAdmin, kemudian buat dua database:
+Buka MySQL atau phpMyAdmin, kemudian buat database utama berikut:
 
 ```sql
 CREATE DATABASE administrasi_rt
 CHARACTER SET utf8mb4
 COLLATE utf8mb4_unicode_ci;
-
-CREATE DATABASE administrasi_rt_test
-CHARACTER SET utf8mb4
-COLLATE utf8mb4_unicode_ci;
 ```
 
-Database kedua khusus untuk pengujian otomatis agar data aplikasi tidak terhapus saat tes dijalankan.
+Database `administrasi_rt_test` tidak diperlukan untuk menjalankan aplikasi. Database tersebut hanya dibuat jika ingin menjalankan pengujian backend pada langkah 7.
 
 ## 4. Memasang backend Laravel
 
@@ -151,16 +147,24 @@ Email    : admin@administrasirt.test
 Password : AdminRT123!
 ```
 
-## 7. Menjalankan pengujian backend
+## 7. Menjalankan pengujian backend (opsional)
 
-Pastikan database `administrasi_rt_test` sudah dibuat. Dari folder `backend`:
+Bagian ini tidak diperlukan untuk menjalankan aplikasi. Jika ingin menjalankan pengujian otomatis, buat database terpisah agar data aplikasi utama tidak terhapus:
+
+```sql
+CREATE DATABASE administrasi_rt_test
+CHARACTER SET utf8mb4
+COLLATE utf8mb4_unicode_ci;
+```
+
+Kemudian, dari folder `backend`:
 
 ```powershell
 Copy-Item .env.testing.example .env.testing
 php artisan key:generate --env=testing
 ```
 
-Sesuaikan bagian `DB_*` pada `.env.testing` agar memakai database `administrasi_rt_test`, bukan `administrasi_rt`.
+File `.env.testing.example` sudah mengarah ke `administrasi_rt_test`. Sesuaikan `DB_USERNAME` dan `DB_PASSWORD` pada `.env.testing` dengan akun MySQL di komputer yang digunakan.
 
 Kemudian jalankan:
 
