@@ -18,6 +18,8 @@ Aplikasi full-stack untuk mengelola penghuni, riwayat hunian rumah, tagihan iura
 
 Panduan instalasi lengkap tersedia di [`dokumentasi/PANDUAN_INSTALASI.md`](dokumentasi/PANDUAN_INSTALASI.md).
 
+Hasil pengujian instalasi dari clone GitHub yang bersih tersedia di [`dokumentasi/UJI_INSTALASI_BERSIH.md`](dokumentasi/UJI_INSTALASI_BERSIH.md).
+
 Dokumentasi endpoint tersedia di [`dokumentasi/API.md`](dokumentasi/API.md).
 
 Rangkuman screenshot setiap fitur tersedia di [`dokumentasi/SCREENSHOTS.md`](dokumentasi/SCREENSHOTS.md).
