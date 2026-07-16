@@ -19,7 +19,7 @@ class ResidentApiTest extends TestCase
         Sanctum::actingAs(User::factory()->create());
 
         $create = $this->post('/api/penghuni', [
-            'nama_lengkap' => 'Budi Santoso',
+            'nama_lengkap' => '  budi   santoso ',
             'foto_ktp' => UploadedFile::fake()->image('ktp-budi.jpg'),
             'jenis_penghuni' => 'tetap',
             'nomor_telepon' => '081234567890',
@@ -36,6 +36,10 @@ class ResidentApiTest extends TestCase
         $this->patchJson("/api/penghuni/{$residentId}", ['nomor_telepon' => '089999999999'])
             ->assertOk()
             ->assertJsonPath('data.nomor_telepon', '089999999999');
+
+        $this->patchJson("/api/penghuni/{$residentId}", ['nama_lengkap' => 'siti   aminah'])
+            ->assertOk()
+            ->assertJsonPath('data.nama_lengkap', 'Siti Aminah');
 
         $this->patchJson("/api/penghuni/{$residentId}", ['nomor_telepon' => '1'])
             ->assertUnprocessable()

@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Str;
 
 class StoreResidentRequest extends FormRequest
 {
@@ -13,6 +14,15 @@ class StoreResidentRequest extends FormRequest
     public function authorize(): bool
     {
         return true;
+    }
+
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('nama_lengkap') && is_string($this->input('nama_lengkap'))) {
+            $this->merge([
+                'nama_lengkap' => Str::of($this->input('nama_lengkap'))->squish()->title()->toString(),
+            ]);
+        }
     }
 
     /**
