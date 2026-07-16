@@ -45,7 +45,7 @@ Field penghuni:
 - `nama_lengkap`: teks, wajib.
 - `foto_ktp`: JPG, PNG, atau WebP, maksimal 5 MB; wajib saat membuat data.
 - `jenis_penghuni`: `tetap` atau `kontrak`.
-- `nomor_telepon`: maksimal 20 karakter.
+- `nomor_telepon`: wajib berisi 10-15 digit; boleh memakai awalan `+`, spasi, tanda kurung, dan tanda hubung, maksimal 20 karakter.
 - `sudah_menikah`: boolean.
 
 ## Rumah dan riwayat hunian

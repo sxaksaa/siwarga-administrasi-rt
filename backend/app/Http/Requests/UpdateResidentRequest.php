@@ -26,8 +26,22 @@ class UpdateResidentRequest extends FormRequest
             'nama_lengkap' => ['sometimes', 'required', 'string', 'max:255'],
             'foto_ktp' => ['sometimes', 'required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
             'jenis_penghuni' => ['sometimes', 'required', 'in:tetap,kontrak'],
-            'nomor_telepon' => ['sometimes', 'required', 'string', 'max:20', 'regex:/^[0-9+()\-\s]+$/'],
+            'nomor_telepon' => [
+                'sometimes',
+                'required',
+                'string',
+                'max:20',
+                'regex:/^(?=(?:\D*\d){10,15}\D*$)\+?[0-9()\-\s]+$/',
+            ],
             'sudah_menikah' => ['sometimes', 'required', 'boolean'],
+        ];
+    }
+
+    /** @return array<string, string> */
+    public function messages(): array
+    {
+        return [
+            'nomor_telepon.regex' => 'Nomor telepon harus berisi 10 sampai 15 digit dan hanya boleh menggunakan angka, +, spasi, tanda kurung, atau tanda hubung.',
         ];
     }
 }

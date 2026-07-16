@@ -36,6 +36,10 @@ class ResidentApiTest extends TestCase
         $this->patchJson("/api/penghuni/{$residentId}", ['nomor_telepon' => '089999999999'])
             ->assertOk()
             ->assertJsonPath('data.nomor_telepon', '089999999999');
+
+        $this->patchJson("/api/penghuni/{$residentId}", ['nomor_telepon' => '1'])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors('nomor_telepon');
     }
 
     public function test_foto_ktp_wajib_dan_harus_berupa_gambar(): void
@@ -72,5 +76,29 @@ class ResidentApiTest extends TestCase
         ], ['Accept' => 'application/json'])
             ->assertUnprocessable()
             ->assertJsonValidationErrors('foto_ktp');
+    }
+
+    public function test_nomor_telepon_harus_memiliki_10_sampai_15_digit(): void
+    {
+        Storage::fake('local');
+        Sanctum::actingAs(User::factory()->create());
+
+        $this->post('/api/penghuni', [
+            'nama_lengkap' => 'Nomor Tidak Valid',
+            'foto_ktp' => UploadedFile::fake()->image('ktp.jpg'),
+            'jenis_penghuni' => 'tetap',
+            'nomor_telepon' => '1',
+            'sudah_menikah' => false,
+        ], ['Accept' => 'application/json'])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors('nomor_telepon');
+
+        $this->post('/api/penghuni', [
+            'nama_lengkap' => 'Nomor Valid',
+            'foto_ktp' => UploadedFile::fake()->image('ktp-valid.jpg'),
+            'jenis_penghuni' => 'tetap',
+            'nomor_telepon' => '+62 812-3456-7890',
+            'sudah_menikah' => false,
+        ], ['Accept' => 'application/json'])->assertSuccessful();
     }
 }
