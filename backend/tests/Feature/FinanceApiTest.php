@@ -170,6 +170,26 @@ class FinanceApiTest extends TestCase
         $this->assertSame(0, Bill::where('penghuni_id', $nextResident->id)->count());
     }
 
+    public function test_tagihan_pergantian_pada_awal_bulan_diberikan_ke_penghuni_baru(): void
+    {
+        [$house, $firstResident] = $this->createOccupiedHouse();
+        HouseOccupancy::where('rumah_id', $house->id)->update(['selesai_tinggal' => '2026-07-01']);
+        $nextResident = Resident::create([
+            'nama_lengkap' => 'Siti Penghuni Baru', 'foto_ktp_path' => 'ktp/siti-baru.jpg',
+            'jenis_penghuni' => 'kontrak', 'nomor_telepon' => '081200000003', 'sudah_menikah' => false,
+        ]);
+        HouseOccupancy::create([
+            'rumah_id' => $house->id, 'penghuni_id' => $nextResident->id, 'mulai_tinggal' => '2026-07-01',
+        ]);
+
+        $this->postJson('/api/tagihan/buat-bulanan', ['periode' => '2026-07'])
+            ->assertOk()
+            ->assertJson(['dibuat' => 2]);
+
+        $this->assertSame(0, Bill::where('penghuni_id', $firstResident->id)->count());
+        $this->assertSame(2, Bill::where('penghuni_id', $nextResident->id)->count());
+    }
+
     public function test_laporan_bulanan_dan_tahunan_menghitung_saldo(): void
     {
         [$house, $resident] = $this->createOccupiedHouse();

@@ -23,16 +23,16 @@ class HouseOccupancy extends Model
     /**
      * Batasi kueri pada hunian yang rentang tanggalnya beririsan.
      *
-     * Rentang tanggal bersifat inklusif. Jika tanggal selesai hunian lama sama
-     * dengan tanggal mulai hunian baru, keduanya tetap dianggap bertumpang tindih.
+     * Tanggal selesai adalah tanggal keluar dan tidak termasuk masa tinggal.
+     * Karena itu, penghuni baru boleh mulai pada tanggal selesai penghuni lama.
      */
     public function scopeOverlapping(Builder $query, string $startDate, ?string $endDate = null): Builder
     {
         return $query
-            ->when($endDate, fn (Builder $query) => $query->whereDate('mulai_tinggal', '<=', $endDate))
+            ->when($endDate, fn (Builder $query) => $query->whereDate('mulai_tinggal', '<', $endDate))
             ->where(function (Builder $query) use ($startDate) {
                 $query->whereNull('selesai_tinggal')
-                    ->orWhereDate('selesai_tinggal', '>=', $startDate);
+                    ->orWhereDate('selesai_tinggal', '>', $startDate);
             });
     }
 

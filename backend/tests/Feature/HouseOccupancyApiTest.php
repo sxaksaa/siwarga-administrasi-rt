@@ -57,6 +57,19 @@ class HouseOccupancyApiTest extends TestCase
             ->assertOk()
             ->assertJsonPath('data.status', 'tidak_dihuni')
             ->assertJsonCount(1, 'data.riwayat_hunian');
+
+        $nextResident = Resident::create($this->residentData('Siti Aminah', '082222222222'));
+
+        $this->postJson("/api/rumah/{$house->id}/hunian", [
+            'penghuni_id' => $nextResident->id,
+            'mulai_tinggal' => '2026-06-30',
+        ])->assertCreated();
+
+        $this->getJson("/api/rumah/{$house->id}")
+            ->assertOk()
+            ->assertJsonPath('data.status', 'dihuni')
+            ->assertJsonPath('data.penghuni_aktif.penghuni.id', $nextResident->id)
+            ->assertJsonCount(2, 'data.riwayat_hunian');
     }
 
     public function test_rumah_dan_penghuni_tidak_boleh_memiliki_hunian_aktif_ganda(): void
@@ -119,13 +132,13 @@ class HouseOccupancyApiTest extends TestCase
 
         $this->postJson("/api/rumah/{$house->id}/hunian", [
             'penghuni_id' => $residentTwo->id,
-            'mulai_tinggal' => '2026-03-31',
+            'mulai_tinggal' => '2026-03-30',
         ])->assertUnprocessable()
             ->assertJsonValidationErrors('rumah');
 
         $this->postJson("/api/rumah/{$house->id}/hunian", [
             'penghuni_id' => $residentTwo->id,
-            'mulai_tinggal' => '2026-04-01',
+            'mulai_tinggal' => '2026-03-31',
         ])->assertCreated();
     }
 
@@ -151,7 +164,7 @@ class HouseOccupancyApiTest extends TestCase
 
         $this->postJson("/api/rumah/{$houseTwo->id}/hunian", [
             'penghuni_id' => $resident->id,
-            'mulai_tinggal' => '2026-04-01',
+            'mulai_tinggal' => '2026-03-31',
         ])->assertCreated();
     }
 
@@ -175,12 +188,12 @@ class HouseOccupancyApiTest extends TestCase
         ]);
 
         $this->patchJson("/api/rumah/{$house->id}/hunian/{$activeOccupancy->id}/selesai", [
-            'selesai_tinggal' => '2026-01-10',
+            'selesai_tinggal' => '2026-01-11',
         ])->assertUnprocessable()
             ->assertJsonValidationErrors('selesai_tinggal');
 
         $this->patchJson("/api/rumah/{$house->id}/hunian/{$activeOccupancy->id}/selesai", [
-            'selesai_tinggal' => '2026-01-09',
+            'selesai_tinggal' => '2026-01-10',
         ])->assertOk()
             ->assertJsonPath('data.aktif', false);
     }

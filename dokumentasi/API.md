@@ -69,7 +69,7 @@ Payload penempatan:
 }
 ```
 
-Sistem menolak hunian aktif ganda, rentang historis yang tumpang tindih, dan tanggal masa depan.
+Sistem menolak hunian aktif ganda, rentang historis yang tumpang tindih, dan tanggal masa depan. `selesai_tinggal` dianggap sebagai tanggal keluar, sehingga penghuni berikutnya boleh mulai pada tanggal yang sama.
 
 ## Tagihan
 

@@ -59,9 +59,9 @@ class HouseOccupancyController extends Controller
             $startDate = $lockedOccupancy->mulai_tinggal->toDateString();
             $endDate = CarbonImmutable::parse($request->validated('selesai_tinggal'))->toDateString();
 
-            if ($endDate < $startDate) {
+            if ($endDate <= $startDate) {
                 throw ValidationException::withMessages([
-                    'selesai_tinggal' => ['Tanggal selesai tidak boleh sebelum tanggal mulai tinggal.'],
+                    'selesai_tinggal' => ['Tanggal keluar harus setelah tanggal mulai tinggal.'],
                 ]);
             }
 

@@ -50,12 +50,12 @@ class BillController extends Controller
                 $query->with('resident')
                     ->whereDate('mulai_tinggal', '<=', $period->endOfMonth())
                     ->where(fn ($builder) => $builder->whereNull('selesai_tinggal')
-                        ->orWhereDate('selesai_tinggal', '>=', $period))
+                        ->orWhereDate('selesai_tinggal', '>', $period))
                     ->oldest('mulai_tinggal');
             }])->chunkById(50, function ($houses) use ($types, $period, $dueDate, &$created, &$skipped) {
                 foreach ($houses as $house) {
                     $occupancy = $house->occupancies->first(fn ($item) => $item->mulai_tinggal->lessThanOrEqualTo($period)
-                        && ($item->selesai_tinggal === null || $item->selesai_tinggal->greaterThanOrEqualTo($period)))
+                        && ($item->selesai_tinggal === null || $item->selesai_tinggal->greaterThan($period)))
                         ?? $house->occupancies->first();
                     if (! $occupancy) {
                         continue;
