@@ -11,6 +11,7 @@ erDiagram
         enum jenis_penghuni "tetap atau kontrak"
         varchar nomor_telepon
         boolean sudah_menikah
+        timestamp deleted_at
     }
     RUMAH {
         bigint id PK
@@ -45,6 +46,7 @@ erDiagram
         date jatuh_tempo
         varchar nama_penghuni_snapshot
         enum jenis_penghuni_snapshot
+        text catatan
     }
     PEMBAYARAN {
         bigint id PK
@@ -55,6 +57,7 @@ erDiagram
         decimal total_bayar
         varchar nama_pembayar_snapshot
         varchar metode_pembayaran
+        text catatan
     }
     ALOKASI_PEMBAYARAN {
         bigint id PK
@@ -70,6 +73,8 @@ erDiagram
         date tanggal_pengeluaran
         boolean rutin
         varchar bukti_path
+        text catatan
+        timestamp deleted_at
     }
 
     RUMAH ||--o{ RIWAYAT_HUNIAN : memiliki
@@ -83,6 +88,8 @@ erDiagram
     TAGIHAN ||--o{ ALOKASI_PEMBAYARAN : dilunasi
 ```
 
+Kolom standar Laravel `created_at` dan `updated_at` tersedia pada seluruh tabel bisnis, tetapi tidak ditampilkan agar diagram tetap ringkas. Kolom `deleted_at` tetap ditampilkan pada tabel yang menggunakan *soft delete* karena memengaruhi status aktif data.
+
 ## Tabel teknis Laravel
 
 Selain tabel bisnis di atas, Laravel memiliki tabel teknis seperti `users`, `personal_access_tokens`, `cache`, `jobs`, dan `migrations`. Nama tabel bawaan tersebut dipertahankan agar kompatibel dengan framework. Tabel teknis tidak termasuk dalam ERD bisnis karena tidak mewakili proses administrasi RT.
@@ -94,4 +101,5 @@ Selain tabel bisnis di atas, Laravel memiliki tabel teknis seperti `users`, `per
 - Tagihan menyimpan snapshot nama dan jenis penghuni agar riwayat tetap benar setelah penghuni pindah atau datanya berubah.
 - Satu rumah hanya memiliki satu tagihan untuk kombinasi jenis iuran dan periode yang sama.
 - Satu pembayaran dapat dialokasikan ke banyak tagihan sehingga pembayaran satu tahun tetap tercatat per bulan.
+- Kombinasi pembayaran dan tagihan pada `alokasi_pembayaran` harus unik agar satu tagihan tidak dicatat dua kali dalam pembayaran yang sama.
 - Pergantian penghuni di tengah bulan tidak mengubah penanggung jawab secara acak: penghuni pada hari pertama periode diprioritaskan, atau penghuni pertama pada bulan tersebut jika rumah sebelumnya kosong.
