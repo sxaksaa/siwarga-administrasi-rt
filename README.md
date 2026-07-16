@@ -18,16 +18,13 @@ Aplikasi full-stack untuk mengelola penghuni, riwayat hunian rumah, tagihan iura
 
 Panduan instalasi lengkap tersedia di [`dokumentasi/PANDUAN_INSTALASI.md`](dokumentasi/PANDUAN_INSTALASI.md).
 
-Hasil pengujian instalasi dari clone GitHub yang bersih tersedia di [`dokumentasi/UJI_INSTALASI_BERSIH.md`](dokumentasi/UJI_INSTALASI_BERSIH.md).
-
 Dokumentasi endpoint tersedia di [`dokumentasi/API.md`](dokumentasi/API.md).
 
 Rangkuman screenshot setiap fitur tersedia di [`dokumentasi/SCREENSHOTS.md`](dokumentasi/SCREENSHOTS.md).
 
-ERD tersedia dalam tiga format:
+ERD tersedia dalam dua format:
 
 - [`dokumentasi/ERD.png`](dokumentasi/ERD.png) untuk dilihat atau dikumpulkan.
 - [`dokumentasi/ERD.drawio`](dokumentasi/ERD.drawio) untuk diedit melalui draw.io/diagrams.net.
-- [`dokumentasi/ERD.md`](dokumentasi/ERD.md) untuk dokumentasi Mermaid di repository.
 
 Secara ringkas, backend dijalankan dari folder `backend` dengan `php artisan serve`, sedangkan frontend dijalankan dari folder `frontend` dengan `npm run dev`.
