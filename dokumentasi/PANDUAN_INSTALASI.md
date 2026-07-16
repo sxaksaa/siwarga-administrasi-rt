@@ -25,11 +25,9 @@ git --version
 ## 2. Mengambil source code
 
 ```powershell
-git clone URL_REPOSITORY administrasi-rt
+git clone https://github.com/sxaksaa/siwarga-administrasi-rt.git administrasi-rt
 cd administrasi-rt
 ```
-
-Ganti `URL_REPOSITORY` dengan alamat repository yang diberikan.
 
 ## 3. Membuat database MySQL
 
