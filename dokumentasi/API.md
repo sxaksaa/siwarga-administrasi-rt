@@ -43,7 +43,7 @@ Payload login:
 Field penghuni:
 
 - `nama_lengkap`: teks, wajib.
-- `foto_ktp`: JPG, PNG, atau WebP, maksimal 2 MB; wajib saat membuat data.
+- `foto_ktp`: JPG, PNG, atau WebP, maksimal 5 MB; wajib saat membuat data.
 - `jenis_penghuni`: `tetap` atau `kontrak`.
 - `nomor_telepon`: maksimal 20 karakter.
 - `sudah_menikah`: boolean.

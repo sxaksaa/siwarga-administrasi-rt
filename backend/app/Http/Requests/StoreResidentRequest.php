@@ -24,7 +24,7 @@ class StoreResidentRequest extends FormRequest
     {
         return [
             'nama_lengkap' => ['required', 'string', 'max:255'],
-            'foto_ktp' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'foto_ktp' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
             'jenis_penghuni' => ['required', 'in:tetap,kontrak'],
             'nomor_telepon' => ['required', 'string', 'max:20', 'regex:/^[0-9+()\-\s]+$/'],
             'sudah_menikah' => ['required', 'boolean'],

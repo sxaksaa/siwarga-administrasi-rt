@@ -49,4 +49,28 @@ class ResidentApiTest extends TestCase
             'sudah_menikah' => true,
         ])->assertUnprocessable()->assertJsonValidationErrors('foto_ktp');
     }
+
+    public function test_foto_ktp_maksimal_lima_megabyte(): void
+    {
+        Storage::fake('local');
+        Sanctum::actingAs(User::factory()->create());
+
+        $this->post('/api/penghuni', [
+            'nama_lengkap' => 'Budi Santoso',
+            'foto_ktp' => UploadedFile::fake()->image('ktp-5mb.jpg')->size(5120),
+            'jenis_penghuni' => 'tetap',
+            'nomor_telepon' => '081234567890',
+            'sudah_menikah' => true,
+        ], ['Accept' => 'application/json'])->assertSuccessful();
+
+        $this->post('/api/penghuni', [
+            'nama_lengkap' => 'Siti Aminah',
+            'foto_ktp' => UploadedFile::fake()->image('ktp-lebih-dari-5mb.jpg')->size(5121),
+            'jenis_penghuni' => 'tetap',
+            'nomor_telepon' => '089876543210',
+            'sudah_menikah' => true,
+        ], ['Accept' => 'application/json'])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors('foto_ktp');
+    }
 }

@@ -24,7 +24,7 @@ class UpdateResidentRequest extends FormRequest
     {
         return [
             'nama_lengkap' => ['sometimes', 'required', 'string', 'max:255'],
-            'foto_ktp' => ['sometimes', 'required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'foto_ktp' => ['sometimes', 'required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
             'jenis_penghuni' => ['sometimes', 'required', 'in:tetap,kontrak'],
             'nomor_telepon' => ['sometimes', 'required', 'string', 'max:20', 'regex:/^[0-9+()\-\s]+$/'],
             'sudah_menikah' => ['sometimes', 'required', 'boolean'],
