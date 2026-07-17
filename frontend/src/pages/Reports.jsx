@@ -2,9 +2,10 @@ import { TrendingUp } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import {
   Bar,
-  BarChart,
+  ComposedChart,
   CartesianGrid,
   Legend,
+  Line,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -154,7 +155,7 @@ export default function Reports() {
         <div className="panel-heading">
           <div>
             <span className="eyebrow">GRAFIK 12 BULAN</span>
-            <h3>Pemasukan dan Pengeluaran {year}</h3>
+            <h3>Pemasukan, Pengeluaran, dan Saldo {year}</h3>
           </div>
           <TrendingUp />
         </div>
@@ -163,7 +164,7 @@ export default function Reports() {
         ) : (
           <div className="chart-wrap report-chart">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chart}>
+              <ComposedChart data={chart}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
                 <XAxis dataKey="bulan" />
                 <YAxis tickFormatter={(value) => `${value / 1000}k`} />
@@ -171,7 +172,8 @@ export default function Reports() {
                 <Legend />
                 <Bar dataKey="pemasukan" name="Pemasukan" fill="#168f72" radius={[5, 5, 0, 0]} />
                 <Bar dataKey="pengeluaran" name="Pengeluaran" fill="#e68b40" radius={[5, 5, 0, 0]} />
-              </BarChart>
+                <Line type="monotone" dataKey="saldo" name="Saldo Sisa" stroke="#3979b4" strokeWidth={3} dot={{ r: 3 }} />
+              </ComposedChart>
             </ResponsiveContainer>
           </div>
         )}
