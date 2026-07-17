@@ -115,24 +115,19 @@ class DemoDataSeeder extends Seeder
                     ],
                 ));
 
-                $shouldPay = $monthNumber <= 5 || ($monthNumber === 6 && $houseIndex < 12) || ($monthNumber === 7 && $houseIndex < 5);
-                $shouldPayPartially = $monthNumber === 6 && $houseIndex === 12;
+                $shouldPay = $monthNumber <= 5 || ($monthNumber === 6 && $houseIndex < 13) || ($monthNumber === 7 && $houseIndex < 5);
 
-                if ($shouldPay || $shouldPayPartially) {
-                    $this->seedPayment($house, $occupancy->resident, $period, $bills->all(), $shouldPayPartially);
+                if ($shouldPay) {
+                    $this->seedPayment($house, $occupancy->resident, $period, $bills->all());
                 }
             }
         }
     }
 
     /** @param array<int, Bill> $bills */
-    private function seedPayment(House $house, Resident $resident, CarbonImmutable $period, array $bills, bool $partial): void
+    private function seedPayment(House $house, Resident $resident, CarbonImmutable $period, array $bills): void
     {
-        $allocations = collect($bills)->map(function ($bill) use ($partial) {
-            $amount = $partial && (float) $bill->nominal === 100000.0 ? 50000.0 : (float) $bill->nominal;
-
-            return [$bill, $amount];
-        });
+        $allocations = collect($bills)->map(fn ($bill) => [$bill, (float) $bill->nominal]);
         $total = $allocations->sum(fn ($row) => $row[1]);
 
         $payment = Payment::updateOrCreate(
@@ -152,7 +147,7 @@ class DemoDataSeeder extends Seeder
             $payment->allocations()->updateOrCreate(['tagihan_id' => $bill->id], ['nominal' => $amount]);
             $bill->update([
                 'nominal_terbayar' => $amount,
-                'status' => $amount >= (float) $bill->nominal ? 'lunas' : 'sebagian',
+                'status' => 'lunas',
             ]);
         }
     }

@@ -91,7 +91,7 @@ class FinanceApiTest extends TestCase
             ]);
     }
 
-    public function test_pembayaran_sebagian_didukung_dan_kelebihan_pembayaran_ditolak(): void
+    public function test_tagihan_harus_dibayar_lunas_dan_nominal_tidak_boleh_diubah(): void
     {
         [$house, $resident] = $this->createOccupiedHouse();
         $this->postJson('/api/tagihan/buat-bulanan', ['periode' => '2026-07'])->assertOk();
@@ -104,12 +104,14 @@ class FinanceApiTest extends TestCase
             'metode_pembayaran' => 'tunai',
             'alokasi' => [['tagihan_id' => $bill->id, 'nominal' => 40000]],
         ];
-        $this->postJson('/api/pembayaran', $payload)->assertSuccessful();
-        $this->assertDatabaseHas('tagihan', ['id' => $bill->id, 'nominal_terbayar' => 40000, 'status' => 'sebagian']);
-
-        $payload['alokasi'][0]['nominal'] = 70000;
         $this->postJson('/api/pembayaran', $payload)
             ->assertUnprocessable()->assertJsonValidationErrors('alokasi');
+        $this->assertDatabaseHas('tagihan', ['id' => $bill->id, 'nominal_terbayar' => 0, 'status' => 'belum_lunas']);
+
+        $payload['alokasi'][0]['nominal'] = 100000;
+        $this->postJson('/api/pembayaran', $payload)
+            ->assertSuccessful();
+        $this->assertDatabaseHas('tagihan', ['id' => $bill->id, 'nominal_terbayar' => 100000, 'status' => 'lunas']);
         $this->assertDatabaseCount('pembayaran', 1);
     }
 
@@ -155,7 +157,7 @@ class FinanceApiTest extends TestCase
             'penghuni_id' => $unrelatedResident->id,
             'tanggal_bayar' => '2026-07-05',
             'metode_pembayaran' => 'tunai',
-            'alokasi' => [['tagihan_id' => $bill->id, 'nominal' => 1000]],
+            'alokasi' => [['tagihan_id' => $bill->id, 'nominal' => (float) $bill->nominal]],
         ])->assertUnprocessable()->assertJsonValidationErrors('penghuni_id');
 
         $this->assertDatabaseCount('pembayaran', 0);

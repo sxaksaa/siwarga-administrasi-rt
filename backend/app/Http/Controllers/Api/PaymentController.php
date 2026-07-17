@@ -185,6 +185,11 @@ class PaymentController extends Controller
                         'alokasi' => ["Pembayaran tagihan #{$bill->id} melebihi sisa tagihan."],
                     ]);
                 }
+                if ($allocationCents !== $remainingCents) {
+                    throw ValidationException::withMessages([
+                        'alokasi' => ["Tagihan #{$bill->id} harus dibayar lunas sebesar ".number_format($remainingCents / 100, 0, ',', '.').'.'],
+                    ]);
+                }
                 $totalCents += $allocationCents;
             }
 
@@ -219,12 +224,11 @@ class PaymentController extends Controller
                 $bill = $bills->get($allocation['tagihan_id']);
                 $amountCents = $this->toCents($allocation['nominal']);
                 $newPaidCents = $this->toCents($bill->nominal_terbayar) + $amountCents;
-                $billCents = $this->toCents($bill->nominal);
 
                 $payment->allocations()->create(['tagihan_id' => $bill->id, 'nominal' => $amountCents / 100]);
                 $bill->update([
                     'nominal_terbayar' => $newPaidCents / 100,
-                    'status' => $newPaidCents >= $billCents ? 'lunas' : 'sebagian',
+                    'status' => 'lunas',
                 ]);
             }
 
