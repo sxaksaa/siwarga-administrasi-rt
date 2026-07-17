@@ -130,17 +130,19 @@ class DemoDataSeeder extends Seeder
         $allocations = collect($bills)->map(fn ($bill) => [$bill, (float) $bill->nominal]);
         $total = $allocations->sum(fn ($row) => $row[1]);
 
-        $payment = Payment::updateOrCreate(
-            ['nomor_bukti' => 'DEMO-'.$period->format('Ym').'-'.$house->nomor_rumah],
-            [
-                'rumah_id' => $house->id,
-                'penghuni_id' => $resident->id,
-                'tanggal_bayar' => $period->day(5)->setTime(9, 0),
-                'total_bayar' => $total,
-                'nama_pembayar_snapshot' => $resident->nama_lengkap,
-                'catatan' => 'Pembayaran fiktif untuk demonstrasi.',
-            ],
-        );
+        $paymentDate = $period->day(5)->setTime(9, 0);
+        $proofNumber = 'BYR-'.$paymentDate->format('Ymd').'-'.$house->nomor_rumah;
+        $legacyProofNumber = 'DEMO-'.$period->format('Ym').'-'.$house->nomor_rumah;
+        $payment = Payment::whereIn('nomor_bukti', [$proofNumber, $legacyProofNumber])->first() ?? new Payment;
+        $payment->fill([
+            'nomor_bukti' => $proofNumber,
+            'rumah_id' => $house->id,
+            'penghuni_id' => $resident->id,
+            'tanggal_bayar' => $paymentDate,
+            'total_bayar' => $total,
+            'nama_pembayar_snapshot' => $resident->nama_lengkap,
+            'catatan' => 'Pembayaran fiktif untuk demonstrasi.',
+        ])->save();
 
         foreach ($allocations as [$bill, $amount]) {
             $payment->allocations()->updateOrCreate(['tagihan_id' => $bill->id], ['nominal' => $amount]);

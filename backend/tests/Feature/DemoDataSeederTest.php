@@ -30,6 +30,8 @@ class DemoDataSeederTest extends TestCase
         )->count());
         $this->assertDatabaseCount('tagihan', 252);
         $this->assertDatabaseCount('pembayaran', 108);
+        $this->assertSame(108, DB::table('pembayaran')->where('nomor_bukti', 'like', 'BYR-%')->count());
+        $this->assertSame(0, DB::table('pembayaran')->where('nomor_bukti', 'like', 'DEMO-%')->count());
         $this->assertDatabaseCount('alokasi_pembayaran', 216);
         $this->assertDatabaseCount('pengeluaran', 16);
 
