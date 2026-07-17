@@ -11,6 +11,7 @@
 .modal-large{max-height:calc(100vh - 40px);overflow-y:auto;overscroll-behavior:contain}
 .prepare-bills{display:flex;align-items:center;gap:12px;padding:12px;border:1px dashed #cbd9d3;border-radius:10px;background:#f7faf8}.prepare-bills small{color:var(--muted);font-size:10px}
 .bill-amount{margin-left:auto;text-align:right;white-space:nowrap}.bill-amount small,.bill-amount strong{display:block}.bill-amount small{font-size:9px;color:var(--muted);margin-bottom:4px}.bill-amount strong{font-size:12px;color:var(--ink)}
+.dashboard-grid{grid-template-columns:minmax(0,1fr)}
 @media(max-width:760px){.detail-summary{grid-template-columns:1fr}.end-occupancy{align-items:stretch;flex-direction:column}.house-actions{flex-direction:column}}
 .monthly-report-stats{margin-top:18px}
 .row-actions{display:flex;gap:6px;white-space:nowrap}.table-action.neutral-action{background:#f0f2f1;color:#53615c}

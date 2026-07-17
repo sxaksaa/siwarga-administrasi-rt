@@ -1,4 +1,4 @@
-import { ArrowDownRight, ArrowUpRight, CircleDollarSign, Home, TrendingUp, Users } from 'lucide-react'
+import { ArrowDownRight, ArrowUpRight, CircleDollarSign, Home, TrendingUp } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import api from '../lib/api.js'
@@ -34,7 +34,6 @@ export default function Dashboard() {
     <section className="dashboard-grid">
       <article className="panel chart-panel"><div className="panel-heading"><div><span className="eyebrow">ARUS KAS</span><h3>Grafik pemasukan & pengeluaran</h3></div><TrendingUp size={20} /></div><div className="chart-wrap"><ResponsiveContainer width="100%" height="100%"><AreaChart data={chartData}><defs><linearGradient id="income" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#168f72" stopOpacity={0.25}/><stop offset="95%" stopColor="#168f72" stopOpacity={0}/></linearGradient></defs><CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e8ece9"/><XAxis dataKey="bulan" axisLine={false} tickLine={false}/><YAxis axisLine={false} tickLine={false} tickFormatter={(v) => `${v / 1000}k`}/><Tooltip formatter={(v) => rupiah(v)}/><Area type="monotone" dataKey="pemasukan" stroke="#168f72" strokeWidth={3} fill="url(#income)"/><Area type="monotone" dataKey="pengeluaran" stroke="#e68b40" strokeWidth={2} fill="transparent"/></AreaChart></ResponsiveContainer></div>
       </article>
-      <article className="panel occupancy-panel"><div className="panel-heading"><div><span className="eyebrow">HUNIAN</span><h3>Status rumah</h3></div><Users size={20} /></div><div className="occupancy-number"><strong>{occupied}</strong><span>rumah dihuni</span></div><div className="progress"><span style={{ width: `${(occupied / (houses.length || 20)) * 100}%` }} /></div><div className="legend"><span><i className="dot green" />Dihuni <b>{occupied}</b></span><span><i className="dot gray" />Kosong <b>{(houses.length || 20) - occupied}</b></span></div></article>
     </section>
   </div>
 }
