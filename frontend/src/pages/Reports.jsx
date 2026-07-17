@@ -1,4 +1,4 @@
-import { Download, TrendingUp } from 'lucide-react'
+import { TrendingUp } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import {
   Bar,
@@ -124,10 +124,6 @@ export default function Reports() {
               onChange={(event) => event.target.value && setMonth(event.target.value)}
             />
           </label>
-          <button className="button secondary" onClick={() => window.print()}>
-            <Download size={17} />
-            Cetak Laporan
-          </button>
         </div>
       </section>
 
