@@ -1,6 +1,6 @@
 # Rangkuman Screenshot Fitur
 
-Seluruh screenshot menggunakan data fiktif dari `DemoDataSeeder`. Foto KTP demo menggunakan gambar kartu identitas parodi kucing yang sama untuk seluruh penghuni, tetapi disimpan sebagai file terpisah agar aman saat diperbarui. Setiap fitur ditampilkan dalam tampilan desktop dan mobile untuk membuktikan desain responsif.
+Seluruh screenshot menggunakan data fiktif dari `DemoDataSeeder`: 20 rumah terdiri dari 15 rumah berpenghuni tetap, 3 rumah berpenghuni kontrak, dan 2 rumah kosong. Foto KTP demo menggunakan gambar kartu identitas parodi kucing yang sama untuk seluruh penghuni, tetapi disimpan sebagai file terpisah agar aman saat diperbarui. Setiap fitur ditampilkan dalam tampilan desktop dan mobile untuk membuktikan desain responsif.
 
 ## 1. Login Administrator
 

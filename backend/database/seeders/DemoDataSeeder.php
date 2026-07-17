@@ -44,6 +44,7 @@ class DemoDataSeeder extends Seeder
             'Andi Pratama', 'Budi Santoso', 'Citra Lestari', 'Dedi Kurniawan', 'Eka Wulandari',
             'Fajar Ramadhan', 'Gita Permata', 'Hendra Wijaya', 'Indah Puspitasari', 'Joko Saputra',
             'Kartika Sari', 'Lukman Hakim', 'Maya Anggraini', 'Nanda Putri', 'Oki Setiawan',
+            'Putri Maharani', 'Raka Wijaya', 'Sinta Amelia',
         ];
 
         return collect($names)->map(function ($name, $index) use ($demoPhoto) {
@@ -53,7 +54,7 @@ class DemoDataSeeder extends Seeder
                 ['nomor_telepon' => '0812'.str_pad((string) $number, 8, '0', STR_PAD_LEFT)],
                 [
                     'nama_lengkap' => $name,
-                    'jenis_penghuni' => $number > 13 ? 'kontrak' : 'tetap',
+                    'jenis_penghuni' => $number > 15 ? 'kontrak' : 'tetap',
                     'sudah_menikah' => $number % 3 !== 0,
                 ],
             );
@@ -85,7 +86,10 @@ class DemoDataSeeder extends Seeder
     private function seedBillsAndPayments(): void
     {
         $dueTypes = DueType::where('aktif', true)->get();
-        $houses = House::with('activeOccupancy.resident')->orderBy('nomor_rumah')->limit(15)->get();
+        $houses = House::with('activeOccupancy.resident')
+            ->whereHas('activeOccupancy')
+            ->orderBy('nomor_rumah')
+            ->get();
 
         foreach (range(1, 7) as $monthNumber) {
             $period = CarbonImmutable::create(2026, $monthNumber, 1);
