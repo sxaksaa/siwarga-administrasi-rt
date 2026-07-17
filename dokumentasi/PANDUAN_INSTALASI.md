@@ -75,9 +75,9 @@ Ganti `password_mysql` dengan password MySQL pada komputer tersebut. Jangan meng
 Atur akun administrator awal pada file yang sama:
 
 ```dotenv
-ADMIN_NAME="Administrator RT"
-ADMIN_EMAIL=admin@administrasirt.test
-ADMIN_PASSWORD=AdminRT123!
+ADMIN_NAME="Admin"
+ADMIN_EMAIL=admin@gmail.com
+ADMIN_PASSWORD=admin
 ```
 
 Untuk penggunaan selain demonstrasi, ganti password awal dengan password yang kuat.
@@ -143,8 +143,8 @@ http://127.0.0.1:5173
 Login menggunakan akun administrator yang diatur pada `backend/.env`. Nilai awalnya:
 
 ```text
-Email    : admin@administrasirt.test
-Password : AdminRT123!
+Email    : admin@gmail.com
+Password : admin
 ```
 
 ## 7. Menjalankan pengujian backend (opsional)

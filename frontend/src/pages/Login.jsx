@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import api from '../lib/api.js'
 
 export default function Login() {
-  const [form, setForm] = useState({ email: 'admin@administrasirt.test', password: 'AdminRT123!' })
+  const [form, setForm] = useState({ email: 'admin@gmail.com', password: 'admin' })
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)

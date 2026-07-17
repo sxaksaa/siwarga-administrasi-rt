@@ -25,8 +25,8 @@ Payload login:
 
 ```json
 {
-  "email": "admin@administrasirt.test",
-  "password": "AdminRT123!"
+  "email": "admin@gmail.com",
+  "password": "admin"
 }
 ```
 

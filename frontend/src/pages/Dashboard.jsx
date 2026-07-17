@@ -6,6 +6,7 @@ import api from '../lib/api.js'
 const rupiah = (value) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(value || 0)
 
 export default function Dashboard() {
+  const user = JSON.parse(localStorage.getItem('pengguna_administrasi_rt') || '{}')
   const [report, setReport] = useState(null)
   const [houses, setHouses] = useState([])
   const [error, setError] = useState('')
@@ -27,7 +28,7 @@ export default function Dashboard() {
   ]
 
   return <div className="page-stack">
-    <section className="page-heading"><div><span className="eyebrow">RINGKASAN {year}</span><h2>Selamat datang, Administrator</h2><p>Pantau kondisi administrasi lingkungan dalam satu tampilan.</p></div><div className="status-pill"><span /> Sistem aktif</div></section>
+    <section className="page-heading"><div><span className="eyebrow">RINGKASAN {year}</span><h2>Selamat datang, {user.nama || 'Admin'}</h2><p>Pantau kondisi administrasi lingkungan dalam satu tampilan.</p></div><div className="status-pill"><span /> Sistem aktif</div></section>
     {error && <div className="alert error">{error}</div>}
     <section className="stat-grid">{cards.map(({ label, value, icon: Icon, tone }) => <article className="stat-card" key={label}><div className={`stat-icon ${tone}`}><Icon /></div><div><p>{label}</p><strong>{value}</strong></div></article>)}</section>
     <section className="dashboard-grid">

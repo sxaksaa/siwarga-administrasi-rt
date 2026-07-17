@@ -13,12 +13,12 @@ class AdminUserSeeder extends Seeder
      */
     public function run(): void
     {
-        User::updateOrCreate(
-            ['email' => env('ADMIN_EMAIL', 'admin@administrasirt.test')],
-            [
-                'name' => env('ADMIN_NAME', 'Administrator RT'),
-                'password' => Hash::make(env('ADMIN_PASSWORD', 'AdminRT123!')),
-            ],
-        );
+        $email = env('ADMIN_EMAIL', 'admin@gmail.com');
+        $user = User::whereIn('email', [$email, 'admin@administrasirt.test'])->first() ?? new User;
+        $user->fill([
+            'name' => env('ADMIN_NAME', 'Admin'),
+            'email' => $email,
+            'password' => Hash::make(env('ADMIN_PASSWORD', 'admin')),
+        ])->save();
     }
 }

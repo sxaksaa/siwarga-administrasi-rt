@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use Database\Seeders\DemoDataSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
@@ -20,6 +21,8 @@ class DemoDataSeederTest extends TestCase
         $this->seed(DemoDataSeeder::class);
 
         $this->assertDatabaseCount('penghuni', 18);
+        $this->assertDatabaseHas('users', ['name' => 'Admin', 'email' => 'admin@gmail.com']);
+        $this->assertTrue(Hash::check('admin', DB::table('users')->where('email', 'admin@gmail.com')->value('password')));
         $this->assertDatabaseCount('rumah', 20);
         $this->assertSame(15, DB::table('penghuni')->where('jenis_penghuni', 'tetap')->count());
         $this->assertSame(3, DB::table('penghuni')->where('jenis_penghuni', 'kontrak')->count());
