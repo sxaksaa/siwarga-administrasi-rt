@@ -172,7 +172,7 @@ export default function Reports() {
                 <Legend />
                 <Bar dataKey="pemasukan" name="Pemasukan" fill="#168f72" radius={[5, 5, 0, 0]} />
                 <Bar dataKey="pengeluaran" name="Pengeluaran" fill="#e68b40" radius={[5, 5, 0, 0]} />
-                <Line type="monotone" dataKey="saldo" name="Saldo Sisa" stroke="#3979b4" strokeWidth={3} dot={{ r: 3 }} />
+                <Line type="monotone" dataKey="saldo" name="Saldo Sisa" stroke="#3979b4" strokeWidth={3} dot={false} />
               </ComposedChart>
             </ResponsiveContainer>
           </div>
