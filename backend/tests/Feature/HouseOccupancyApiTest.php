@@ -93,6 +93,28 @@ class HouseOccupancyApiTest extends TestCase
         ])->assertUnprocessable()->assertJsonValidationErrors('penghuni_id');
     }
 
+    public function test_penghuni_dapat_keluar_dan_diganti_pada_tanggal_mulai_yang_sama(): void
+    {
+        Sanctum::actingAs(User::factory()->create());
+        $house = House::create(['nomor_rumah' => 'A-01']);
+        $residentOne = Resident::create($this->residentData('Budi Santoso', '081111111111'));
+        $residentTwo = Resident::create($this->residentData('Siti Aminah', '082222222222'));
+
+        $occupancyId = $this->postJson("/api/rumah/{$house->id}/hunian", [
+            'penghuni_id' => $residentOne->id,
+            'mulai_tinggal' => '2026-07-15',
+        ])->assertCreated()->json('data.id');
+
+        $this->patchJson("/api/rumah/{$house->id}/hunian/{$occupancyId}/selesai", [
+            'selesai_tinggal' => '2026-07-15',
+        ])->assertOk();
+
+        $this->postJson("/api/rumah/{$house->id}/hunian", [
+            'penghuni_id' => $residentTwo->id,
+            'mulai_tinggal' => '2026-07-15',
+        ])->assertCreated();
+    }
+
     public function test_tanggal_mulai_dan_selesai_tinggal_tidak_boleh_di_masa_depan(): void
     {
         Sanctum::actingAs(User::factory()->create());
