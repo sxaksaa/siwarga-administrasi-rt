@@ -15,7 +15,7 @@ class Payment extends Model
 
     protected $fillable = [
         'nomor_bukti', 'rumah_id', 'penghuni_id', 'tanggal_bayar', 'total_bayar',
-        'nama_pembayar_snapshot', 'metode_pembayaran', 'catatan',
+        'nama_pembayar_snapshot', 'catatan',
     ];
 
     protected function casts(): array

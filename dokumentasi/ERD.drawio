@@ -329,7 +329,7 @@
           <mxGeometry height="30" width="285" x="45" as="geometry" />
         </mxCell>
         <mxCell id="pembayaran" parent="1" style="swimlane;childLayout=tableLayout;horizontal=1;startSize=36;fillColor=#356CA0;strokeColor=#356CA0;fontColor=#ffffff;fontStyle=1;fontFamily=Arial;fontSize=15;rounded=1;arcSize=10;shadow=1;whiteSpace=wrap;html=1;" value="PEMBAYARAN" vertex="1">
-          <mxGeometry height="306" width="330" x="850" y="580" as="geometry" />
+          <mxGeometry height="276" width="330" x="850" y="580" as="geometry" />
         </mxCell>
         <mxCell id="by_r1" parent="pembayaran" style="shape=tableRow;horizontal=1;startSize=0;fillColor=none;strokeColor=none;whiteSpace=wrap;html=1;" value="" vertex="1">
           <mxGeometry height="30" width="330" y="36" as="geometry" />
@@ -394,17 +394,8 @@
         <mxCell id="by_r7_c2" parent="by_r7" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=1;right=0;strokeColor=#d3d3d3;align=left;spacingLeft=8;fontFamily=Arial;fontSize=13;" value="nama_pembayar_snapshot : VARCHAR" vertex="1">
           <mxGeometry height="30" width="285" x="45" as="geometry" />
         </mxCell>
-        <mxCell id="by_r8" parent="pembayaran" style="shape=tableRow;horizontal=1;startSize=0;fillColor=none;strokeColor=none;whiteSpace=wrap;html=1;" value="" vertex="1">
-          <mxGeometry height="30" width="330" y="246" as="geometry" />
-        </mxCell>
-        <mxCell id="by_r8_c1" parent="by_r8" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=1;right=1;strokeColor=#d3d3d3;align=center;" value="" vertex="1">
-          <mxGeometry height="30" width="45" as="geometry" />
-        </mxCell>
-        <mxCell id="by_r8_c2" parent="by_r8" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=1;right=0;strokeColor=#d3d3d3;align=left;spacingLeft=8;fontFamily=Arial;fontSize=13;" value="metode_pembayaran : VARCHAR" vertex="1">
-          <mxGeometry height="30" width="285" x="45" as="geometry" />
-        </mxCell>
         <mxCell id="by_r9" parent="pembayaran" style="shape=tableRow;horizontal=1;startSize=0;fillColor=none;strokeColor=none;whiteSpace=wrap;html=1;" value="" vertex="1">
-          <mxGeometry height="30" width="330" y="276" as="geometry" />
+          <mxGeometry height="30" width="330" y="246" as="geometry" />
         </mxCell>
         <mxCell id="by_r9_c1" parent="by_r9" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=1;right=1;strokeColor=#d3d3d3;align=center;" value="" vertex="1">
           <mxGeometry height="30" width="45" as="geometry" />

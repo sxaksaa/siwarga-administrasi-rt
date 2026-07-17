@@ -51,7 +51,6 @@ class FinanceApiTest extends TestCase
             'rumah_id' => $house->id,
             'penghuni_id' => $resident->id,
             'tanggal_bayar' => '2026-07-05 09:00:00',
-            'metode_pembayaran' => 'transfer',
             'alokasi' => $bills->map(fn ($bill) => ['tagihan_id' => $bill->id, 'nominal' => (float) $bill->nominal])->all(),
         ])->assertSuccessful()->assertJsonPath('data.total_bayar', 115000);
 
@@ -70,7 +69,6 @@ class FinanceApiTest extends TestCase
             'rumah_id' => $house->id,
             'penghuni_id' => $resident->id,
             'tanggal_bayar' => '2026-07-05',
-            'metode_pembayaran' => 'transfer',
             'alokasi' => [['tagihan_id' => $bill->id, 'nominal' => (float) $bill->nominal]],
         ])->assertSuccessful();
 
@@ -101,7 +99,6 @@ class FinanceApiTest extends TestCase
             'rumah_id' => $house->id,
             'penghuni_id' => $resident->id,
             'tanggal_bayar' => '2026-07-05',
-            'metode_pembayaran' => 'tunai',
             'alokasi' => [['tagihan_id' => $bill->id, 'nominal' => 40000]],
         ];
         $this->postJson('/api/pembayaran', $payload)
@@ -156,7 +153,6 @@ class FinanceApiTest extends TestCase
             'rumah_id' => $house->id,
             'penghuni_id' => $unrelatedResident->id,
             'tanggal_bayar' => '2026-07-05',
-            'metode_pembayaran' => 'tunai',
             'alokasi' => [['tagihan_id' => $bill->id, 'nominal' => (float) $bill->nominal]],
         ])->assertUnprocessable()->assertJsonValidationErrors('penghuni_id');
 
@@ -180,7 +176,7 @@ class FinanceApiTest extends TestCase
         foreach ([[$previousResident, $bills[0]], [$activeResident, $bills[1]]] as [$payer, $bill]) {
             $this->postJson('/api/pembayaran', [
                 'rumah_id' => $house->id, 'penghuni_id' => $payer->id,
-                'tanggal_bayar' => '2026-07-20', 'metode_pembayaran' => 'transfer',
+                'tanggal_bayar' => '2026-07-20',
                 'alokasi' => [['tagihan_id' => $bill->id, 'nominal' => (float) $bill->nominal]],
             ])->assertSuccessful();
         }
@@ -259,7 +255,6 @@ class FinanceApiTest extends TestCase
             'rumah_id' => $house->id,
             'penghuni_id' => $resident->id,
             'tanggal_bayar' => '2026-07-05',
-            'metode_pembayaran' => 'tunai',
             'alokasi' => [['tagihan_id' => $bill->id, 'nominal' => 100000]],
         ])->assertSuccessful();
         Expense::create([

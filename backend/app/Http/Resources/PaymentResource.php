@@ -23,7 +23,6 @@ class PaymentResource extends JsonResource
             'nama_pembayar' => $this->nama_pembayar_snapshot,
             'tanggal_bayar' => $this->tanggal_bayar?->toISOString(),
             'total_bayar' => (float) $this->total_bayar,
-            'metode_pembayaran' => $this->metode_pembayaran,
             'catatan' => $this->catatan,
             'alokasi' => $this->whenLoaded('allocations', fn () => $this->allocations->map(fn ($allocation) => [
                 'tagihan_id' => $allocation->tagihan_id,

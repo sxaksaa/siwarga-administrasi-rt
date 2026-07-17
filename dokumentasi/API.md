@@ -93,15 +93,14 @@ Pembuatan tagihan bersifat idempoten: pemanggilan ulang tidak menggandakan kombi
 |---|---|---|
 | `GET` | `/pembayaran` | Riwayat pembayaran; filter `bulan`, `rumah_id`, dan `per_page`. |
 | `GET` | `/pembayaran/opsi?rumah_id={id}` | Seluruh tagihan tertunggak dan calon pembayar yang sah untuk satu rumah. |
-| `POST` | `/pembayaran` | Mencatat pembayaran penuh atau sebagian. |
+| `POST` | `/pembayaran` | Mencatat pelunasan satu atau beberapa tagihan. |
 
 ```json
 {
   "rumah_id": 1,
   "penghuni_id": 1,
   "tanggal_bayar": "2026-07-05",
-  "metode_pembayaran": "transfer",
-  "catatan": "Transfer bank",
+  "catatan": "Pembayaran iuran bulan Juli",
   "alokasi": [
     { "tagihan_id": 1, "nominal": 100000 },
     { "tagihan_id": 2, "nominal": 15000 }
@@ -109,7 +108,7 @@ Pembuatan tagihan bersifat idempoten: pemanggilan ulang tidak menggandakan kombi
 }
 ```
 
-Semua tagihan harus berasal dari rumah yang sama. Nominal tidak boleh melebihi sisa tagihan dan pembayar harus merupakan penghuni aktif atau penghuni historis yang terkait dengan tagihan terpilih.
+Semua tagihan harus berasal dari rumah yang sama dan dibayar lunas sesuai sisa tagihannya. Pembayar harus merupakan penghuni aktif atau penghuni historis yang terkait dengan tagihan terpilih.
 
 ## Pengeluaran
 

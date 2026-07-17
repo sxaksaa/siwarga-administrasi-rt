@@ -19,7 +19,6 @@ return new class extends Migration
             $table->dateTime('tanggal_bayar');
             $table->decimal('total_bayar', 14, 2);
             $table->string('nama_pembayar_snapshot');
-            $table->string('metode_pembayaran')->default('tunai');
             $table->text('catatan')->nullable();
             $table->timestamps();
 

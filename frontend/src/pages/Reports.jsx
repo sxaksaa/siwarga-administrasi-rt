@@ -272,7 +272,6 @@ export default function Reports() {
                 <th>Nomor Bukti</th>
                 <th>Rumah</th>
                 <th>Pembayar</th>
-                <th>Metode</th>
                 <th>Total</th>
               </tr>
             </thead>
@@ -283,12 +282,11 @@ export default function Reports() {
                   <td><strong>{payment.nomor_bukti}</strong></td>
                   <td>{payment.nomor_rumah || '-'}</td>
                   <td>{payment.nama_pembayar || '-'}</td>
-                  <td><span className="badge neutral">{payment.metode_pembayaran || '-'}</span></td>
                   <td className="text-green"><strong>{rupiah(payment.total_bayar)}</strong></td>
                 </tr>
               ))}
               {!monthlyLoading && !payments.length && (
-                <tr><td colSpan="6" className="empty">Belum ada pemasukan pada bulan ini.</td></tr>
+                <tr><td colSpan="5" className="empty">Belum ada pemasukan pada bulan ini.</td></tr>
               )}
             </tbody>
           </table>

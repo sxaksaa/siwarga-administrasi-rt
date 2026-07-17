@@ -216,7 +216,6 @@ class PaymentController extends Controller
                 'tanggal_bayar' => $request->date('tanggal_bayar'),
                 'total_bayar' => $totalCents / 100,
                 'nama_pembayar_snapshot' => $resident->nama_lengkap,
-                'metode_pembayaran' => $request->input('metode_pembayaran'),
                 'catatan' => $request->input('catatan'),
             ]);
 

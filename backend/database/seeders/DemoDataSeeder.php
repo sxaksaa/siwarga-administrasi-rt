@@ -138,7 +138,6 @@ class DemoDataSeeder extends Seeder
                 'tanggal_bayar' => $period->day(5)->setTime(9, 0),
                 'total_bayar' => $total,
                 'nama_pembayar_snapshot' => $resident->nama_lengkap,
-                'metode_pembayaran' => $house->id % 2 === 0 ? 'transfer' : 'tunai',
                 'catatan' => 'Pembayaran fiktif untuk demonstrasi.',
             ],
         );
