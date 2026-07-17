@@ -41,7 +41,7 @@ export default function Layout() {
       <div className="sidebar-user"><div className="avatar">{(user.nama || 'A').slice(0, 1)}</div><div><strong>{user.nama || 'Administrator'}</strong><small>{user.email}</small></div><button onClick={logout} title="Keluar"><LogOut size={18} /></button></div>
     </aside>
     <main className="main-area">
-      <header className="topbar"><button className="menu-button" onClick={() => setOpen(true)}><Menu /></button><div><small>Administrasi Perumahan</small><h1>{activeLabel}</h1></div><div className="today">Portal Pengelola</div></header>
+      <header className="topbar"><button className="menu-button" onClick={() => setOpen(true)}><Menu /></button><h1>{activeLabel}</h1></header>
       <div className="page-content"><Outlet /></div>
     </main>
   </div>
