@@ -1,75 +1,75 @@
 # Rangkuman Screenshot Fitur
 
-Seluruh screenshot menggunakan data fiktif dari `DemoDataSeeder`: 20 rumah terdiri dari 15 rumah berpenghuni tetap, 3 rumah berpenghuni kontrak, dan 2 rumah kosong. Foto KTP demo menggunakan gambar kartu identitas parodi kucing yang sama untuk seluruh penghuni, tetapi disimpan sebagai file terpisah agar aman saat diperbarui. Setiap fitur ditampilkan dalam tampilan desktop dan mobile untuk membuktikan desain responsif.
+Seluruh screenshot menggunakan data demo administrasi perumahan. Setiap halaman utama ditampilkan dalam tampilan desktop dan mobile untuk memperlihatkan bahwa antarmuka tetap dapat digunakan pada ukuran layar yang berbeda.
 
 ## 1. Login Administrator
 
-Halaman autentikasi untuk membatasi akses pengelolaan data RT.
+Halaman autentikasi administrator untuk membatasi akses ke pengelolaan data RT.
 
 | Desktop | Mobile |
 |---|---|
-| ![Login Desktop](screenshots/Login_Macbook.png) | ![Login Mobile](screenshots/Login_iPhone.png) |
+| ![Login desktop](screenshots/Login_Desktop.png) | ![Login mobile](screenshots/Login_Mobile.png) |
 
 ## 2. Dashboard
 
-Ringkasan pemasukan, pengeluaran, saldo, status rumah, dan grafik arus kas tahunan.
+Ringkasan pemasukan, pengeluaran, saldo saat ini, jumlah rumah dihuni, dan grafik arus kas tahunan.
 
 | Desktop | Mobile |
 |---|---|
-| ![Dashboard Desktop](screenshots/Dashboard_Macbook.png) | ![Dashboard Mobile](screenshots/Dashboard_iPhone.png) |
+| ![Dashboard desktop](screenshots/Dashboard_Desktop.png) | ![Dashboard mobile](screenshots/Dashboard_Mobile.png) |
 
 ## 3. Penghuni
 
-Pengelolaan identitas penghuni tetap dan kontrak, termasuk foto KTP privat.
+Pengelolaan identitas penghuni tetap dan kontrak, termasuk nomor telepon, status pernikahan, dan foto KTP privat.
 
 | Desktop | Mobile |
 |---|---|
-| ![Penghuni Desktop](screenshots/Penghuni_Macbook.png) | ![Penghuni Mobile](screenshots/Penghuni_iPhone.png) |
+| ![Penghuni desktop](screenshots/Penghuni_Desktop.png) | ![Penghuni mobile](screenshots/Penghuni_Mobile.png) |
 
 ## 4. Rumah
 
-Daftar 20 rumah beserta status dihuni atau tidak dihuni dan penghuni aktifnya.
+Daftar 20 rumah yang menampilkan status dihuni atau tidak dihuni, penghuni aktif, jenis penghuni tetap atau kontrak, serta akses menuju detail dan riwayat rumah.
 
 | Desktop | Mobile |
 |---|---|
-| ![Rumah Desktop](screenshots/Rumah_Macbook.png) | ![Rumah Mobile](screenshots/Rumah_iPhone.png) |
+| ![Rumah desktop](screenshots/Rumah_Desktop.png) | ![Rumah mobile](screenshots/Rumah_Mobile.png) |
 
-## 5. Riwayat Penghuni Rumah
+## 5. Riwayat Penghuni dan Pembayaran Rumah
 
-Detail rumah, penghuni aktif, penempatan penghuni, akhir masa tinggal, dan histori penghuni sebelumnya.
+Detail rumah yang memperlihatkan penghuni aktif, riwayat pergantian penghuni, serta histori tagihan dan status pembayarannya.
 
 | Desktop | Mobile |
 |---|---|
-| ![Riwayat Rumah Desktop](screenshots/Riwayat_Rumah_Macbook.png) | ![Riwayat Rumah Mobile](screenshots/Riwayat_Rumah_iPhone.png) |
+| ![Riwayat rumah desktop](screenshots/Riwayat_Rumah_Desktop.png) | ![Riwayat rumah mobile](screenshots/Riwayat_Rumah_Mobile.png) |
 
 ## 6. Tagihan
 
-Pembuatan dan pemantauan tagihan satpam serta kebersihan berdasarkan periode.
+Pembuatan dan pemantauan tagihan satpam serta kebersihan berdasarkan periode dan status pelunasan.
 
 | Desktop | Mobile |
 |---|---|
-| ![Tagihan Desktop](screenshots/Tagihan_Macbook.png) | ![Tagihan Mobile](screenshots/Tagihan_iPhone.png) |
+| ![Tagihan desktop](screenshots/Tagihan_Desktop.png) | ![Tagihan mobile](screenshots/Tagihan_Mobile.png) |
 
 ## 7. Pembayaran
 
-Pencatatan pembayaran penuh atau sebagian untuk satu atau beberapa tagihan.
+Pencatatan pelunasan satu atau beberapa tagihan dalam satu transaksi beserta riwayat pembayar, rumah, tanggal, nomor bukti, dan total pembayaran.
 
 | Desktop | Mobile |
 |---|---|
-| ![Pembayaran Desktop](screenshots/Pembayaran_Macbook.png) | ![Pembayaran Mobile](screenshots/Pembayaran_iPhone.png) |
+| ![Pembayaran desktop](screenshots/Pembayaran_Desktop.png) | ![Pembayaran mobile](screenshots/Pembayaran_Mobile.png) |
 
 ## 8. Pengeluaran
 
-Pencatatan biaya rutin dan nonrutin seperti gaji satpam, token listrik, dan perbaikan fasilitas.
+Pencatatan dan perubahan biaya rutin maupun tidak rutin, seperti gaji satpam, token listrik pos satpam, dan perbaikan fasilitas.
 
 | Desktop | Mobile |
 |---|---|
-| ![Pengeluaran Desktop](screenshots/Pengeluaran_Macbook.png) | ![Pengeluaran Mobile](screenshots/Pengeluaran_iPhone.png) |
+| ![Pengeluaran desktop](screenshots/Pengeluaran_Desktop.png) | ![Pengeluaran mobile](screenshots/Pengeluaran_Mobile.png) |
 
 ## 9. Laporan
 
-Grafik tahunan serta detail pemasukan, pengeluaran, saldo awal, dan saldo akhir per bulan.
+Ringkasan pemasukan, pengeluaran, dan saldo akhir; grafik selama 12 bulan; serta detail transaksi untuk bulan yang dipilih.
 
 | Desktop | Mobile |
 |---|---|
-| ![Laporan Desktop](screenshots/Laporan_Macbook.png) | ![Laporan Mobile](screenshots/Laporan_iPhone.png) |
+| ![Laporan desktop](screenshots/Laporan_Desktop.png) | ![Laporan mobile](screenshots/Laporan_Mobile.png) |

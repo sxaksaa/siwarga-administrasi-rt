@@ -9,7 +9,7 @@ Pastikan komputer memiliki:
 - PHP 8.2 atau lebih baru dengan ekstensi `bcmath`, `ctype`, `curl`, `fileinfo`, `gd`, `intl`, `mbstring`, `openssl`, `pdo_mysql`, `tokenizer`, `xml`, dan `zip`.
 - Composer 2.
 - MySQL 8.
-- Node.js 20 atau lebih baru dan npm.
+- Node.js 20.19 atau lebih baru (atau Node.js 22.12+) dan npm.
 - Git.
 
 Periksa instalasi:

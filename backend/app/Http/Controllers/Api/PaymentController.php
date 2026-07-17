@@ -49,7 +49,7 @@ class PaymentController extends Controller
         $bills = Bill::query()
             ->with(['house', 'dueType'])
             ->where('rumah_id', $houseId)
-            ->whereIn('status', ['belum_lunas', 'sebagian'])
+            ->where('status', 'belum_lunas')
             ->orderBy('periode_tagihan')
             ->orderBy('jenis_iuran_id')
             ->get();

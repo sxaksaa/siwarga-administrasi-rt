@@ -8,7 +8,7 @@
 6. Iuran kebersihan bernilai awal Rp15.000 per bulan.
 7. Nominal awal dapat dikelola tanpa mengubah nilai tagihan lama.
 8. Pembayaran beberapa bulan dibuat sebagai satu transaksi dengan beberapa alokasi tagihan.
-9. Status tagihan adalah belum lunas, dibayar sebagian, atau lunas dan ditentukan dari total alokasi pembayaran.
+9. Status tagihan hanya **belum lunas** atau **lunas**. Setiap tagihan yang dipilih wajib dibayar penuh sesuai sisa tagihannya.
 10. Penghapusan penghuni dan pengeluaran memakai soft delete agar jejak administrasi tidak hilang.
 11. Jika penghuni berganti di tengah bulan, tagihan bulan tersebut menjadi tanggung jawab penghuni yang tinggal pada hari pertama periode.
 12. Jika rumah masih kosong pada hari pertama lalu mulai dihuni pada pertengahan bulan, penghuni pertama pada bulan tersebut menjadi penanggung jawab tagihan.

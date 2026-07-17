@@ -19,7 +19,7 @@ return new class extends Migration
             $table->date('periode_tagihan');
             $table->decimal('nominal', 14, 2);
             $table->decimal('nominal_terbayar', 14, 2)->default(0);
-            $table->enum('status', ['belum_lunas', 'sebagian', 'lunas'])->default('belum_lunas');
+            $table->enum('status', ['belum_lunas', 'lunas'])->default('belum_lunas');
             $table->date('jatuh_tempo')->nullable();
             $table->string('nama_penghuni_snapshot');
             $table->enum('jenis_penghuni_snapshot', ['tetap', 'kontrak']);

@@ -44,18 +44,21 @@ class DemoDataSeeder extends Seeder
             'Andi Pratama', 'Budi Santoso', 'Citra Lestari', 'Dedi Kurniawan', 'Eka Wulandari',
             'Fajar Ramadhan', 'Gita Permata', 'Hendra Wijaya', 'Indah Puspitasari', 'Joko Saputra',
             'Kartika Sari', 'Lukman Hakim', 'Maya Anggraini', 'Nanda Putri', 'Oki Setiawan',
-            'Putri Maharani', 'Raka Wijaya', 'Sinta Amelia',
+            'Putri Maharani', 'Raka Wijaya', 'Sinta Amelia', 'Atmint Loh',
         ];
 
         return collect($names)->map(function ($name, $index) use ($demoPhoto) {
             $number = $index + 1;
+            $isReplacementResident = $name === 'Atmint Loh';
 
             $resident = Resident::updateOrCreate(
-                ['nomor_telepon' => '0812'.str_pad((string) $number, 8, '0', STR_PAD_LEFT)],
+                ['nomor_telepon' => $isReplacementResident
+                    ? '089876538274'
+                    : '0812'.str_pad((string) $number, 8, '0', STR_PAD_LEFT)],
                 [
                     'nama_lengkap' => $name,
                     'jenis_penghuni' => $number > 15 ? 'kontrak' : 'tetap',
-                    'sudah_menikah' => $number % 3 !== 0,
+                    'sudah_menikah' => $isReplacementResident ? false : $number % 3 !== 0,
                 ],
             );
 
@@ -70,32 +73,101 @@ class DemoDataSeeder extends Seeder
     /** @param array<int, Resident> $residents */
     private function seedOccupancies(array $residents): void
     {
-        foreach ($residents as $index => $resident) {
+        foreach (array_slice($residents, 0, 18) as $index => $resident) {
             $house = House::where('nomor_rumah', sprintf('A-%02d', $index + 1))->firstOrFail();
+            $startDate = $index < 10 ? '2025-01-01' : '2026-01-01';
 
-            HouseOccupancy::updateOrCreate(
-                ['rumah_id' => $house->id, 'penghuni_id' => $resident->id, 'selesai_tinggal' => null],
-                [
-                    'mulai_tinggal' => $index < 10 ? '2025-01-01' : '2026-01-01',
-                    'catatan' => 'Data fiktif untuk demonstrasi aplikasi.',
-                ],
-            );
+            if ($resident->nama_lengkap === 'Raka Wijaya') {
+                $this->seedHistoricalOccupancy($house, $resident, $startDate, '2026-07-17');
+
+                continue;
+            }
+
+            $this->seedActiveOccupancy($house, $resident, $startDate);
         }
+
+        $replacementResident = collect($residents)->firstWhere('nama_lengkap', 'Atmint Loh');
+        $replacementHouse = House::where('nomor_rumah', 'A-17')->firstOrFail();
+
+        $this->seedActiveOccupancy($replacementHouse, $replacementResident, '2026-07-17');
+    }
+
+    private function seedHistoricalOccupancy(House $house, Resident $resident, string $startDate, string $endDate): void
+    {
+        $demoOccupancies = HouseOccupancy::query()
+            ->where('rumah_id', $house->id)
+            ->where('penghuni_id', $resident->id)
+            ->whereDate('mulai_tinggal', $startDate);
+
+        if ((clone $demoOccupancies)->whereNotNull('selesai_tinggal')->exists()) {
+            (clone $demoOccupancies)->whereNull('selesai_tinggal')->delete();
+
+            return;
+        }
+
+        $activeOccupancy = (clone $demoOccupancies)->whereNull('selesai_tinggal')->first();
+        if ($activeOccupancy) {
+            $activeOccupancy->update(['selesai_tinggal' => $endDate]);
+
+            return;
+        }
+
+        HouseOccupancy::create([
+            'rumah_id' => $house->id,
+            'penghuni_id' => $resident->id,
+            'mulai_tinggal' => $startDate,
+            'selesai_tinggal' => $endDate,
+            'catatan' => 'Data fiktif untuk demonstrasi aplikasi.',
+        ]);
+    }
+
+    private function seedActiveOccupancy(House $house, Resident $resident, string $startDate): void
+    {
+        $demoOccupancies = HouseOccupancy::query()
+            ->where('rumah_id', $house->id)
+            ->where('penghuni_id', $resident->id)
+            ->whereDate('mulai_tinggal', $startDate);
+
+        // Jangan mengaktifkan kembali penghuni demo yang sudah selesai.
+        if ((clone $demoOccupancies)->whereNotNull('selesai_tinggal')->exists()) {
+            (clone $demoOccupancies)->whereNull('selesai_tinggal')->delete();
+
+            return;
+        }
+
+        // Pertahankan pergantian penghuni yang dibuat melalui aplikasi.
+        if (HouseOccupancy::query()->where('rumah_id', $house->id)->whereNull('selesai_tinggal')->exists()
+            || HouseOccupancy::query()->where('penghuni_id', $resident->id)->whereNull('selesai_tinggal')->exists()) {
+            return;
+        }
+
+        HouseOccupancy::create([
+            'rumah_id' => $house->id,
+            'penghuni_id' => $resident->id,
+            'mulai_tinggal' => $startDate,
+            'catatan' => 'Data fiktif untuk demonstrasi aplikasi.',
+        ]);
     }
 
     private function seedBillsAndPayments(): void
     {
         $dueTypes = DueType::where('aktif', true)->get();
-        $houses = House::with('activeOccupancy.resident')
-            ->whereHas('activeOccupancy')
-            ->orderBy('nomor_rumah')
-            ->get();
+        $houses = House::orderBy('nomor_rumah')->get();
 
         foreach (range(1, 7) as $monthNumber) {
             $period = CarbonImmutable::create(2026, $monthNumber, 1);
 
             foreach ($houses as $houseIndex => $house) {
-                $occupancy = $house->activeOccupancy;
+                $occupancy = HouseOccupancy::query()
+                    ->with('resident')
+                    ->where('rumah_id', $house->id)
+                    ->whereDate('mulai_tinggal', '<=', $period->toDateString())
+                    ->where(fn ($query) => $query
+                        ->whereNull('selesai_tinggal')
+                        ->orWhereDate('selesai_tinggal', '>', $period->toDateString()))
+                    ->latest('mulai_tinggal')
+                    ->first();
+
                 if (! $occupancy) {
                     continue;
                 }
@@ -122,6 +194,68 @@ class DemoDataSeeder extends Seeder
                 }
             }
         }
+
+        $this->seedAnnualCleaningBills();
+        $this->seedReplacementResidentPayment();
+    }
+
+    private function seedAnnualCleaningBills(): void
+    {
+        $house = House::where('nomor_rumah', 'A-17')->firstOrFail();
+        $resident = Resident::where('nama_lengkap', 'Atmint Loh')->firstOrFail();
+        $cleaningDue = DueType::where('kode', 'KEBERSIHAN')->firstOrFail();
+
+        foreach (range(1, 11) as $monthOffset) {
+            $period = CarbonImmutable::create(2026, 7, 1)->addMonths($monthOffset);
+
+            Bill::firstOrCreate(
+                [
+                    'rumah_id' => $house->id,
+                    'jenis_iuran_id' => $cleaningDue->id,
+                    'periode_tagihan' => $period->toDateString(),
+                ],
+                [
+                    'penghuni_id' => $resident->id,
+                    'nominal' => $cleaningDue->nominal_default,
+                    'jatuh_tempo' => $period->day(10)->toDateString(),
+                    'nama_penghuni_snapshot' => $resident->nama_lengkap,
+                    'jenis_penghuni_snapshot' => $resident->jenis_penghuni,
+                ],
+            );
+        }
+    }
+
+    private function seedReplacementResidentPayment(): void
+    {
+        $house = House::where('nomor_rumah', 'A-17')->firstOrFail();
+        $resident = Resident::where('nama_lengkap', 'Atmint Loh')->firstOrFail();
+        $bills = Bill::query()
+            ->where('rumah_id', $house->id)
+            ->whereDate('periode_tagihan', '2026-06-01')
+            ->get();
+        $total = (float) $bills->sum('nominal');
+
+        $payment = Payment::firstOrCreate(
+            ['nomor_bukti' => 'BYR-20260717-KQ4GVI'],
+            [
+                'rumah_id' => $house->id,
+                'penghuni_id' => $resident->id,
+                'tanggal_bayar' => CarbonImmutable::create(2026, 7, 17),
+                'total_bayar' => $total,
+                'nama_pembayar_snapshot' => $resident->nama_lengkap,
+            ],
+        );
+
+        foreach ($bills as $bill) {
+            $payment->allocations()->updateOrCreate(
+                ['tagihan_id' => $bill->id],
+                ['nominal' => $bill->nominal],
+            );
+            $bill->update([
+                'nominal_terbayar' => $bill->nominal,
+                'status' => 'lunas',
+            ]);
+        }
     }
 
     /** @param array<int, Bill> $bills */
@@ -133,8 +267,9 @@ class DemoDataSeeder extends Seeder
         $paymentDate = $period->day(5)->setTime(9, 0);
         $proofNumber = 'BYR-'.$paymentDate->format('Ymd').'-'.$house->nomor_rumah;
         $legacyProofNumber = 'DEMO-'.$period->format('Ym').'-'.$house->nomor_rumah;
-        $payment = Payment::whereIn('nomor_bukti', [$proofNumber, $legacyProofNumber])->first() ?? new Payment;
-        $payment->fill([
+        $payment = Payment::whereIn('nomor_bukti', [$proofNumber, $legacyProofNumber])->first();
+
+        $attributes = [
             'nomor_bukti' => $proofNumber,
             'rumah_id' => $house->id,
             'penghuni_id' => $resident->id,
@@ -142,7 +277,14 @@ class DemoDataSeeder extends Seeder
             'total_bayar' => $total,
             'nama_pembayar_snapshot' => $resident->nama_lengkap,
             'catatan' => 'Pembayaran fiktif untuk demonstrasi.',
-        ])->save();
+        ];
+
+        if (! $payment) {
+            $payment = Payment::create($attributes);
+        } elseif ($payment->nomor_bukti === $legacyProofNumber
+            || $payment->catatan === 'Pembayaran fiktif untuk demonstrasi.') {
+            $payment->update($attributes);
+        }
 
         foreach ($allocations as [$bill, $amount]) {
             $payment->allocations()->updateOrCreate(['tagihan_id' => $bill->id], ['nominal' => $amount]);

@@ -10,6 +10,7 @@ use App\Models\HouseOccupancy;
 use App\Models\Resident;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Schema;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
@@ -39,6 +40,11 @@ class FinanceApiTest extends TestCase
         $this->assertDatabaseCount('tagihan', 2);
         $this->assertDatabaseMissing('tagihan', ['rumah_id' => House::where('nomor_rumah', 'A-02')->value('id')]);
         $this->assertDatabaseHas('tagihan', ['rumah_id' => $occupiedHouse->id, 'status' => 'belum_lunas']);
+    }
+
+    public function test_schema_pembayaran_tidak_menyimpan_metode_pembayaran(): void
+    {
+        $this->assertFalse(Schema::hasColumn('pembayaran', 'metode_pembayaran'));
     }
 
     public function test_satu_pembayaran_dapat_melunasi_beberapa_tagihan(): void
