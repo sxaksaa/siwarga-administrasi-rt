@@ -60,6 +60,37 @@ class FinanceApiTest extends TestCase
         $this->assertSame(2, Bill::where('status', 'lunas')->count());
     }
 
+    public function test_detail_rumah_memuat_riwayat_tagihan_beserta_penghuni_dan_status(): void
+    {
+        [$house, $resident] = $this->createOccupiedHouse();
+        $this->postJson('/api/tagihan/buat-bulanan', ['periode' => '2026-07'])->assertOk();
+        $bill = Bill::whereHas('dueType', fn ($query) => $query->where('kode', 'SATPAM'))->firstOrFail();
+
+        $this->postJson('/api/pembayaran', [
+            'rumah_id' => $house->id,
+            'penghuni_id' => $resident->id,
+            'tanggal_bayar' => '2026-07-05',
+            'metode_pembayaran' => 'transfer',
+            'alokasi' => [['tagihan_id' => $bill->id, 'nominal' => (float) $bill->nominal]],
+        ])->assertSuccessful();
+
+        $this->getJson("/api/rumah/{$house->id}")
+            ->assertOk()
+            ->assertJsonCount(2, 'data.riwayat_tagihan')
+            ->assertJsonFragment([
+                'nama_penghuni' => $resident->nama_lengkap,
+                'jenis_iuran' => 'Iuran Satpam',
+                'nominal_terbayar' => 100000,
+                'status' => 'lunas',
+            ])
+            ->assertJsonFragment([
+                'nama_penghuni' => $resident->nama_lengkap,
+                'jenis_iuran' => 'Iuran Kebersihan',
+                'nominal_terbayar' => 0,
+                'status' => 'belum_lunas',
+            ]);
+    }
+
     public function test_pembayaran_sebagian_didukung_dan_kelebihan_pembayaran_ditolak(): void
     {
         [$house, $resident] = $this->createOccupiedHouse();

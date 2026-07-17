@@ -40,7 +40,11 @@ class HouseController extends Controller
 
     public function show(House $house): HouseResource
     {
-        $house->load(['activeOccupancy.resident', 'occupancies' => fn ($query) => $query->with('resident')->latest('mulai_tinggal')]);
+        $house->load([
+            'activeOccupancy.resident',
+            'occupancies' => fn ($query) => $query->with('resident')->latest('mulai_tinggal'),
+            'bills' => fn ($query) => $query->with('dueType')->latest('periode_tagihan')->latest('id'),
+        ]);
 
         return new HouseResource($house);
     }

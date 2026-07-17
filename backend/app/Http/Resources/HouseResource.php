@@ -24,6 +24,7 @@ class HouseResource extends JsonResource
                 ? new HouseOccupancyResource($this->activeOccupancy)
                 : null,
             'riwayat_hunian' => HouseOccupancyResource::collection($this->whenLoaded('occupancies')),
+            'riwayat_tagihan' => BillResource::collection($this->whenLoaded('bills')),
             'dibuat_pada' => $this->created_at?->toISOString(),
             'diperbarui_pada' => $this->updated_at?->toISOString(),
         ];
