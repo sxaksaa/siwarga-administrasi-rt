@@ -113,6 +113,33 @@ class FinanceApiTest extends TestCase
         $this->assertDatabaseCount('pembayaran', 1);
     }
 
+    public function test_tagihan_tahunan_dimulai_dari_bulan_pilihan_dan_satpam_tetap_bulanan(): void
+    {
+        [$house, $resident] = $this->createOccupiedHouse();
+
+        $payload = ['rumah_id' => $house->id, 'periode_awal' => '2026-07', 'durasi' => 12];
+        $this->postJson('/api/pembayaran/siapkan-tagihan', $payload)
+            ->assertOk()
+            ->assertJsonPath('data.dibuat', 13)
+            ->assertJsonCount(13, 'data.tagihan_ids');
+
+        $this->assertSame(1, Bill::whereHas('dueType', fn ($query) => $query->where('kode', 'SATPAM'))->count());
+        $this->assertSame(12, Bill::whereHas('dueType', fn ($query) => $query->where('kode', 'KEBERSIHAN'))->count());
+        $this->assertDatabaseHas('tagihan', [
+            'penghuni_id' => $resident->id,
+            'periode_tagihan' => '2026-07-01',
+            'nama_penghuni_snapshot' => $resident->nama_lengkap,
+        ]);
+        $this->assertDatabaseHas('tagihan', ['periode_tagihan' => '2027-06-01']);
+        $this->assertDatabaseMissing('tagihan', ['periode_tagihan' => '2027-07-01']);
+
+        $this->postJson('/api/pembayaran/siapkan-tagihan', $payload)
+            ->assertOk()
+            ->assertJsonPath('data.dibuat', 0)
+            ->assertJsonPath('data.sudah_tersedia', 13);
+        $this->assertDatabaseCount('tagihan', 13);
+    }
+
     public function test_pembayar_yang_tidak_terkait_dengan_rumah_atau_tagihan_ditolak(): void
     {
         [$house] = $this->createOccupiedHouse();

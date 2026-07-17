@@ -7,9 +7,11 @@ use App\Http\Requests\StorePaymentRequest;
 use App\Http\Resources\BillResource;
 use App\Http\Resources\PaymentResource;
 use App\Models\Bill;
+use App\Models\DueType;
 use App\Models\HouseOccupancy;
 use App\Models\Payment;
 use App\Models\Resident;
+use Carbon\CarbonImmutable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -81,6 +83,83 @@ class PaymentController extends Controller
                 // Endpoint ini sengaja tidak dipaginasi karena hanya memuat tagihan tertunggak satu rumah.
                 'tagihan' => $bills->map(fn (Bill $bill) => (new BillResource($bill))->resolve($request))->values(),
                 'pembayar' => $residents,
+            ],
+        ]);
+    }
+
+    public function prepareBills(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'rumah_id' => ['required', 'integer', 'exists:rumah,id'],
+            'periode_awal' => ['required', 'date_format:Y-m'],
+            'durasi' => ['required', 'integer', 'in:1,12'],
+        ], [
+            'rumah_id.required' => 'Rumah wajib dipilih.',
+            'periode_awal.required' => 'Periode awal wajib dipilih.',
+            'durasi.in' => 'Durasi pembayaran harus bulanan atau tahunan.',
+        ]);
+
+        $occupancy = HouseOccupancy::query()
+            ->with('resident')
+            ->where('rumah_id', $validated['rumah_id'])
+            ->whereNull('selesai_tinggal')
+            ->latest('mulai_tinggal')
+            ->first();
+
+        if (! $occupancy) {
+            throw ValidationException::withMessages([
+                'rumah_id' => ['Rumah harus memiliki penghuni aktif untuk menyiapkan tagihan.'],
+            ]);
+        }
+
+        $startPeriod = CarbonImmutable::createFromFormat('Y-m', $validated['periode_awal'])->startOfMonth();
+        if ($startPeriod->endOfMonth()->isBefore($occupancy->mulai_tinggal)) {
+            throw ValidationException::withMessages([
+                'periode_awal' => ['Periode awal tidak boleh sebelum penghuni mulai menempati rumah.'],
+            ]);
+        }
+
+        $duration = (int) $validated['durasi'];
+        $types = DueType::query()->where('aktif', true)->get();
+        $billIds = [];
+        $created = 0;
+        $skipped = 0;
+
+        DB::transaction(function () use ($occupancy, $startPeriod, $duration, $types, &$billIds, &$created, &$skipped) {
+            foreach ($types as $type) {
+                $months = $duration === 12 && $type->kode !== 'SATPAM' ? 12 : 1;
+
+                foreach (range(0, $months - 1) as $offset) {
+                    $period = $startPeriod->addMonths($offset);
+                    $bill = Bill::firstOrCreate(
+                        [
+                            'rumah_id' => $occupancy->rumah_id,
+                            'jenis_iuran_id' => $type->id,
+                            'periode_tagihan' => $period->toDateString(),
+                        ],
+                        [
+                            'penghuni_id' => $occupancy->penghuni_id,
+                            'nominal' => $type->nominal_default,
+                            'jatuh_tempo' => $period->day(10)->toDateString(),
+                            'nama_penghuni_snapshot' => $occupancy->resident->nama_lengkap,
+                            'jenis_penghuni_snapshot' => $occupancy->resident->jenis_penghuni,
+                        ],
+                    );
+
+                    $bill->wasRecentlyCreated ? $created++ : $skipped++;
+                    $billIds[] = $bill->id;
+                }
+            }
+        });
+
+        return response()->json([
+            'message' => $duration === 12
+                ? 'Tagihan tahunan berhasil disiapkan. Iuran satpam hanya disiapkan untuk bulan pertama.'
+                : 'Tagihan bulanan berhasil disiapkan.',
+            'data' => [
+                'tagihan_ids' => $billIds,
+                'dibuat' => $created,
+                'sudah_tersedia' => $skipped,
             ],
         ]);
     }

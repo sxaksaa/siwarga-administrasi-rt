@@ -33,6 +33,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/tagihan/buat-bulanan', [BillController::class, 'generate']);
     Route::get('/pembayaran', [PaymentController::class, 'index']);
     Route::get('/pembayaran/opsi', [PaymentController::class, 'options']);
+    Route::post('/pembayaran/siapkan-tagihan', [PaymentController::class, 'prepareBills']);
     Route::post('/pembayaran', [PaymentController::class, 'store']);
     Route::apiResource('pengeluaran', ExpenseController::class)
         ->parameters(['pengeluaran' => 'expense']);
