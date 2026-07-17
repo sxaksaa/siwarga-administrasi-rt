@@ -274,6 +274,25 @@ class FinanceApiTest extends TestCase
         ])->assertJsonPath('bulanan.6.saldo', 75000);
     }
 
+    public function test_data_pengeluaran_dapat_diperbarui(): void
+    {
+        $expense = Expense::create([
+            'kategori' => 'Operasional', 'keterangan' => 'Token listrik', 'nominal' => 150000,
+            'tanggal_pengeluaran' => '2026-07-10', 'rutin' => true,
+        ]);
+
+        $this->patchJson("/api/pengeluaran/{$expense->id}", [
+            'kategori' => 'Keamanan', 'keterangan' => 'Perbaikan pos satpam', 'nominal' => 250000,
+            'tanggal_pengeluaran' => '2026-07-11', 'rutin' => false, 'catatan' => 'Nominal dikoreksi.',
+        ])->assertOk()
+            ->assertJsonPath('data.keterangan', 'Perbaikan pos satpam')
+            ->assertJsonPath('data.nominal', 250000);
+
+        $this->assertDatabaseHas('pengeluaran', [
+            'id' => $expense->id, 'kategori' => 'Keamanan', 'nominal' => 250000, 'rutin' => false,
+        ]);
+    }
+
     private function createOccupiedHouse(): array
     {
         $house = House::create(['nomor_rumah' => 'A-01']);
