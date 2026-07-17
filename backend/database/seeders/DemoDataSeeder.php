@@ -12,6 +12,7 @@ use App\Models\Resident;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class DemoDataSeeder extends Seeder
 {
@@ -34,24 +35,34 @@ class DemoDataSeeder extends Seeder
     /** @return array<int, Resident> */
     private function seedResidents(): array
     {
+        $demoPhoto = file_get_contents(database_path('seeders/assets/ktp-demo-kucing.png'));
+        if ($demoPhoto === false) {
+            throw new \RuntimeException('Aset foto KTP demo tidak ditemukan.');
+        }
+
         $names = [
             'Andi Pratama', 'Budi Santoso', 'Citra Lestari', 'Dedi Kurniawan', 'Eka Wulandari',
             'Fajar Ramadhan', 'Gita Permata', 'Hendra Wijaya', 'Indah Puspitasari', 'Joko Saputra',
             'Kartika Sari', 'Lukman Hakim', 'Maya Anggraini', 'Nanda Putri', 'Oki Setiawan',
         ];
 
-        return collect($names)->map(function ($name, $index) {
+        return collect($names)->map(function ($name, $index) use ($demoPhoto) {
             $number = $index + 1;
 
-            return Resident::updateOrCreate(
+            $resident = Resident::updateOrCreate(
                 ['nomor_telepon' => '0812'.str_pad((string) $number, 8, '0', STR_PAD_LEFT)],
                 [
                     'nama_lengkap' => $name,
                     'jenis_penghuni' => $number > 13 ? 'kontrak' : 'tetap',
                     'sudah_menikah' => $number % 3 !== 0,
-                    'foto_ktp_path' => null,
                 ],
             );
+
+            $photoPath = "ktp/demo-penghuni-{$resident->id}.png";
+            Storage::disk('local')->put($photoPath, $demoPhoto);
+            $resident->update(['foto_ktp_path' => $photoPath]);
+
+            return $resident;
         })->all();
     }
 

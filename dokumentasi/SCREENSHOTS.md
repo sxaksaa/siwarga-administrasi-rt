@@ -1,6 +1,6 @@
 # Rangkuman Screenshot Fitur
 
-Seluruh screenshot menggunakan data fiktif dari `DemoDataSeeder`. Setiap fitur ditampilkan dalam tampilan desktop dan mobile untuk membuktikan desain responsif.
+Seluruh screenshot menggunakan data fiktif dari `DemoDataSeeder`. Foto KTP demo menggunakan gambar kartu identitas parodi kucing yang sama untuk seluruh penghuni, tetapi disimpan sebagai file terpisah agar aman saat diperbarui. Setiap fitur ditampilkan dalam tampilan desktop dan mobile untuk membuktikan desain responsif.
 
 ## 1. Login Administrator
 
